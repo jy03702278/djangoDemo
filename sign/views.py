@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.contrib import auth
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -31,6 +32,9 @@ def login_action(request):
             #render函数第三个参数，是字典，显示key对应的value的错误信息.html页面要用{{ error}}，才可以显示对应的内容
             return render(request,'index.html',{'error':'username or password error !'})
 
+#这个装饰器，限制某个视图函数必须登录才能访问,也就是说，此时直接访问该（/event_manage/...）路径，会默认跳转到‘accounts/login/’
+#只要在urls.py中新增 accounts/login/路径，并且定位到登录页（即index.html）。
+@login_required
 def event_manage(request):
     # username = request.COOKIES.get('user','') #读取浏览器cookie
     username = request.session.get('user','') #读取浏览器session
